@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import gymnasium as gym
+import numpy as np
 
 
 # ------------- TODO: Implement the following environment -------------
@@ -31,7 +32,38 @@ class MyEnv(gym.Env):
 
     def __init__(self):
         """Initializes the observation and action space for the environment."""
-        pass
+        self.observation_space = gym.spaces.Discrete(2)
+        self.action_space = gym.spaces.Discrete(2)
+        self.state = 0
+        self.max_steps = 100
+        self.steps = 0
+
+    def reset(self, seed):
+        self.state = 0
+        self.steps = 0
+        return 0, {}
+
+    def step(self, action):
+        action = int(action)
+
+        if not self.action_space.contains(action):
+            raise RuntimeError("Invalid action taken")
+
+        self.state = action
+        self.steps += 1
+
+        return self.state, action, False, self.steps < self.max_steps, {}
+
+    def get_reward_per_action(self):
+        return np.array([[0, 1], [0, 1]])
+
+    def get_transition_matrix(self):
+        T = np.zeros((2, 2, 2))
+        T[0, 0, 0] = 1
+        T[0, 1, 1] = 1
+        T[1, 0, 0] = 1
+        T[1, 1, 1] = 1
+        return T
 
 
 class PartialObsWrapper(gym.Wrapper):
