@@ -7,6 +7,7 @@ from rl_exercises.environments import (  # adjust import path as needed
     MarsRover,
     MarsRoverPartialObsWrapper,
 )
+from rl_exercises.week_2.my_env import PartialObsWrapper
 
 
 def test_env_has_spaces_and_methods():
@@ -64,6 +65,7 @@ def test_partial_obs_zero_noise():
     """With noise=0, wrapper observations equal true state."""
     base = MarsRover(seed=0)
     wrapper = MarsRoverPartialObsWrapper(base, noise=0.0, seed=0)
+    _wrapper = PartialObsWrapper(base, noise=0.0, seed=0)
 
     obs, _ = wrapper.reset(seed=0)
     assert obs == base.position
@@ -79,6 +81,7 @@ def test_partial_obs_full_noise():
     """With noise=1, wrapper observations never equal true state."""
     base = MarsRover(seed=42)
     wrapper = MarsRoverPartialObsWrapper(base, noise=1.0, seed=42)
+    _wrapper = PartialObsWrapper(base, noise=1.0, seed=42)
 
     obs, _ = wrapper.reset()
     assert obs != base.position, (
